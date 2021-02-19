@@ -1,20 +1,29 @@
-import { useState            } from 'react';
-import { Alert, Button, Form } from 'react-bootstrap';
+import { useState            } from 'react'
+import { Alert, Button, Form } from 'react-bootstrap'
+import { request             } from './utils/fetch'
+
+const backendUrl = 'http://backend.example.com'
 
 export default function Login() {
-  const [email,    setEmail   ] = useState('')
-  const [password, setPassword] = useState('')
-  const [remember, setRemember] = useState(false)
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [email,          setEmail         ] = useState('')
+  const [password,       setPassword      ] = useState('')
+  const [remember,       setRemember      ] = useState(false)
+  const [loginSucceeded, setLoginSucceeded] = useState(null)
 
-  const submit = () => {
-    console.log('submitting', { email, password, remember })
-    setLoggedIn(true)
+  const submit = async () => {
+    const data     = { email, password, remember }
+    const response = await request('POST', `${backendUrl}/api/login`, { data })
+
+    setLoginSucceeded(response.ok)
   }
 
-  const alert = (
-    <Alert variant="success" id="login-alert">You are logged in</Alert>
-  )
+  let alert
+
+  if (loginSucceeded === true) {
+    alert = <Alert variant="success" id="login-alert">You are logged in</Alert>
+  } else if (loginSucceeded === false) {
+    alert = <Alert variant="danger" id="login-alert">Login failed</Alert>
+  }
 
   const form = (
     <Form>
@@ -47,7 +56,7 @@ export default function Login() {
 
   return (
     <>
-      {loggedIn && alert}
+      {alert}
       {form}
     </>
   )
