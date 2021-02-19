@@ -1,6 +1,6 @@
 import { useState            } from 'react'
 import { Alert, Button, Form } from 'react-bootstrap'
-import { request             } from './utils/fetch'
+import { request             } from 'src/utils/fetch'
 
 const backendUrl = 'http://backend.example.com'
 

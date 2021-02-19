@@ -1,4 +1,4 @@
-import makeServer from "../../src/server"
+import makeServer from "src/server"
 import LoginPage  from './pages/login'
 
 context('Admin login', () => {

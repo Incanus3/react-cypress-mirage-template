@@ -15,7 +15,33 @@
 /**
  * @type {Cypress.PluginConfig}
  */
+
+const path = require('path')
+const findWebpack = require('find-webpack')
+const webpackPreprocessor = require('@cypress/webpack-preprocessor')
+
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
+
+  const webpackOptions = findWebpack.getWebpackOptions()
+
+  if (!webpackOptions) {
+    throw new Error('Could not find Webpack in this project 😢')
+  }
+
+  const cleanOptions = {
+    reactScripts: true,
+  }
+
+  findWebpack.cleanForCypress(cleanOptions, webpackOptions)
+
+  webpackOptions.resolve.alias['src'] = path.resolve('src')
+
+  const options = {
+    webpackOptions,
+    watchOptions: {},
+  }
+
+  on('file:preprocessor', webpackPreprocessor(options))
 }
